@@ -1,4 +1,6 @@
 class LineBotsController < ApplicationController
+  def index
+  end
 
   def get_api
     body = request.body.read
@@ -30,6 +32,7 @@ class LineBotsController < ApplicationController
     "OK"
   end
 
+  private
 
   def client
     @client ||= Line::Bot::Client.new { |config|
