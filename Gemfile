@@ -32,6 +32,7 @@ gem 'jbuilder', '~> 2.5'
 
 # line bot
 gem 'line-bot-api'
+gem 'rest-client'
 
 gem 'pg'
 # Use Capistrano for deployment
