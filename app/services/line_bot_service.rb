@@ -2,20 +2,39 @@ require 'line/bot'
 require 'active_support'
 
 class LineBotService
-  attr_reader :msg_text
+  attr_reader :event_type
   def initialize(event)
     @event = event
     parse_event
   end
 
-  def reply_msg(msg)
-    message = {
-      type: 'text',
-      text: msg.to_s
-    }
+  def reply_message(option = {})
+    reply_object = case @message_obj["type"]
+                   when "text"
+                     text_object
+                   when "sticker"
+                     sticker_object
+                   else
+                     {type: 'text', text: "Excuse me?"}
+                   end
 
-    response = client.reply_message(@reply_token, message)
+    response = client.reply_message(@reply_token, reply_object)
     p response
+  end
+
+  def sticker_object
+    {
+      type: 'sticker',
+      packageId: 2,
+      stickerId: 149
+    }
+  end
+
+  def text_object(text = "#{@message_obj["text"]}...")
+    {
+      type: 'text',
+      text: text.to_s
+    }
   end
 
   def client
@@ -25,22 +44,28 @@ class LineBotService
     }
   end
 
+  def message_type
+    @message_obj["type"]
+  end
+
   private
 
   def parse_event
     parse_reply_token
-    parse_message
+    parse_event_type
+    parse_message_obj
+  end
+
+  def parse_event_type
+    @event_type = @event["type"]
+  end
+
+  def parse_message_obj
+    @message_obj = @event["message"]
   end
 
   def parse_reply_token
     @reply_token = @event["replyToken"]
     fail "no reply token" if @reply_token.blank?
-  end
-
-  def parse_message
-    message = @event["message"]
-    return if message.blank?
-
-    @msg_text = message["text"]
   end
 end

@@ -7,7 +7,7 @@ class LineBotsController < ApplicationController
     if params["events"].present?
       params["events"].each do |event|
         line_bot_service = LineBotService.new(event)
-        line_bot_service.reply_msg("#{line_bot_service.msg_text}...")
+        line_bot_service.reply_message
       end
     end
 
