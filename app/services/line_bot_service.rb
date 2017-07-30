@@ -22,11 +22,11 @@ class LineBotService
     p response
   end
 
-  def sticker_object
+  def sticker_object(sticker_obj = LineSticker.all.sample)
     {
       type: 'sticker',
-      packageId: 2,
-      stickerId: 149
+      packageId: sticker_obj.stk_pkg_id,
+      stickerId: sticker_obj.stk_id
     }
   end
 
