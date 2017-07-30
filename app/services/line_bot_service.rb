@@ -18,6 +18,8 @@ class LineBotService
                      {type: 'text', text: "Excuse me?"}
                    end
 
+    reply_object = img_object(@img_url, host: option[:host]) if @img_url
+
     response = client.reply_message(@reply_token, reply_object)
     p response
   end
@@ -34,6 +36,16 @@ class LineBotService
     {
       type: 'text',
       text: text.to_s
+    }
+  end
+
+  def img_object(url, host:)
+    full_url = host.present? ? "#{host}#{url}" : url
+    Rails.logger.info("#{full_url}")
+    {
+      "type": "image",
+      "originalContentUrl": full_url,
+      "previewImageUrl": full_url
     }
   end
 
@@ -62,6 +74,13 @@ class LineBotService
 
   def parse_message_obj
     @message_obj = @event["message"]
+
+    words = @message_obj['text'].try(:split)
+    if words.present? && words.include?('開團')
+      words.delete('開團')
+      store = Store.find_by(ch_name: words.first)
+      @img_url = store.menu.url
+    end
   end
 
   def parse_reply_token

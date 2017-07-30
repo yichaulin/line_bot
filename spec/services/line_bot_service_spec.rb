@@ -8,11 +8,22 @@ describe "LineBotService", :type => :services do
 
   describe "sticker_object" do
     it "should return sticker object" do
+      LineSticker.create(stk_id: 1, stk_pkg_id: 1)
       obj = klass.new(event).sticker_object
 
       expect(obj[:type]).to eq('sticker')
       expect(obj[:stickerId]).not_to be_nil
       expect(obj[:packageId]).not_to be_nil
+    end
+  end
+
+  describe "img_object" do
+    it "should return img object" do
+      obj = klass.new(event).img_object('/upload/store/1/menu.jpg', host: 'http://localhost:3000')
+
+      expect(obj[:type]).to eq('image')
+      expect(obj[:originalContentUrl]).to eq('http://localhost:3000/public/upload/store/1/menu.jpg')
+
     end
   end
 end
