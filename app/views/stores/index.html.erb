@@ -1,0 +1,41 @@
+<h1> Store List </h1>
+
+<h2> New Store </h2>
+<%= form_for Store.new, url: stores_path do |f|%>
+  <div class="form-group input-group">
+    <div class="input-group-addon">EN Name</div>
+    <%= f.text_field :en_name, class: "form-control"%>
+  </div>
+  <div class="form-group input-group">
+    <div class="input-group-addon">CH Name</div>
+    <%= f.text_field :ch_name, class: "form-control" %>
+  </div>
+  <%= f.file_field :menu %>
+  <%= f.submit "Create", class: "btn btn-primary" %>
+<% end %>
+
+<hr />
+
+<table class="table">
+  <thead>
+    <th>EN Name</th>
+    <th>CH Name</th>
+    <th>Menu</th>
+  </thead>
+  <tbody>
+    <% @stores.each do |store| %>
+      <tr>
+        <%= form_for store, url: store_path(store.id), method: :patch do |f|%>
+          <td><%= f.text_field :en_name, class: "form-control"%></td>
+          <td><%= f.text_field :ch_name, class: "form-control" %></td>
+          <td>
+            <%= link_to f.object.menu.file.basename, f.object.menu.url, target: :_blank if f.object.menu.present?%>
+            <%= f.file_field :menu %>
+          </td>
+          </div>
+          <td><%= f.submit "Update", class: "btn btn-warning" %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

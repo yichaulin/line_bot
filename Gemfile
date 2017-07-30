@@ -32,8 +32,13 @@ gem 'jbuilder', '~> 2.5'
 
 # line bot
 gem 'line-bot-api'
+
 gem 'rest-client'
 gem 'pg'
+gem 'carrierwave'
+gem 'mini_magick'
+gem 'bootstrap-sass', '~> 3.3.6'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
