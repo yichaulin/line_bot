@@ -33,7 +33,6 @@ gem 'jbuilder', '~> 2.5'
 # line bot
 gem 'line-bot-api'
 gem 'rest-client'
-
 gem 'pg'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -41,6 +40,7 @@ gem 'pg'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'rspec-rails'
 end
 
 group :development do
