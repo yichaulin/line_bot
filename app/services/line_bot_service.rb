@@ -18,7 +18,7 @@ class LineBotService
                      {type: 'text', text: "Excuse me?"}
                    end
 
-    reply_object = img_object(@img_url, host: option[:host]) if @img_url
+    reply_object = img_object(@img_url) if @img_url
 
     response = client.reply_message(@reply_token, reply_object)
     p response
@@ -39,13 +39,11 @@ class LineBotService
     }
   end
 
-  def img_object(url, host:)
-    full_url = host.present? ? "#{host}#{url}" : url
-    Rails.logger.info("#{full_url}")
+  def img_object(url)
     {
       "type": "image",
-      "originalContentUrl": full_url,
-      "previewImageUrl": full_url
+      "originalContentUrl": url,
+      "previewImageUrl": url
     }
   end
 

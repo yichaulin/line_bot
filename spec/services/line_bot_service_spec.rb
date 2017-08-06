@@ -19,10 +19,10 @@ describe "LineBotService", :type => :services do
 
   describe "img_object" do
     it "should return img object" do
-      obj = klass.new(event).img_object('/upload/store/1/menu.jpg', host: 'http://localhost:3000')
+      obj = klass.new(event).img_object('/upload/store/1/menu.jpg')
 
       expect(obj[:type]).to eq('image')
-      expect(obj[:originalContentUrl]).to eq('http://localhost:3000/public/upload/store/1/menu.jpg')
+      expect(obj[:originalContentUrl]).to eq('/upload/store/1/menu.jpg')
 
     end
   end

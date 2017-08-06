@@ -29,7 +29,7 @@
           <td><%= f.text_field :en_name, class: "form-control"%></td>
           <td><%= f.text_field :ch_name, class: "form-control" %></td>
           <td>
-            <%= link_to f.object.menu.file.basename, f.object.menu.url, target: :_blank if f.object.menu.present?%>
+            <%= link_to 'menu', f.object.menu.url, target: :_blank if f.object.menu.present?%>
             <%= f.file_field :menu %>
           </td>
           </div>
