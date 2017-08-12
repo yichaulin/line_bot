@@ -6,7 +6,7 @@ class LineBotsController < ApplicationController
   def callbacks
     if params["events"].present?
       params["events"].each do |event|
-        line_bot_service = LineBotService.new(event)
+        line_bot_service = LineBot::LineBotService.new(event)
         line_bot_service.reply_message
       end
     end
