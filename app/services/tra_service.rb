@@ -37,7 +37,7 @@ class TraService
   end
 
   def find_station_id(station_name)
-    station = TraStation.find_by(station_name: station_name)
+    station = TraStation.find_by(station_name: station_name.gsub('台', '臺'))
     fail "wrong station name, #{station_name}" if station.blank?
     station.station_id
   end
