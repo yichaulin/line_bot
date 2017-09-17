@@ -10,19 +10,30 @@ class TraService
     train_infos(1)
   end
 
-  def train_infos(info_count = 5)
-    query_date = @base_datetime.to_date
+  def train_infos(info_count = 5, query_date = @base_datetime.to_date, return_msg = true)
     time_table = get_time_table_between_station(@from_station, @to_station, query_date)
-    time_table = get_time_table_between_station(@from_station, @to_station, query_date + 1.day) if time_table.size == 0
 
     trains = time_table.sort_by{ |t| t["OriginStopTime"]["DepartureTime"] }
                     .select{ |t| @base_datetime <= Time.zone.parse("#{@base_datetime.to_date} #{t["OriginStopTime"]["DepartureTime"]}") }
                     .first(info_count)
 
+
     msg = "近#{info_count}班列車: \n"
     trains.each do |train|
       msg += "#{train["DailyTrainInfo"]["TrainTypeName"]["Zh_tw"]} : #{train["OriginStopTime"]["DepartureTime"]}\n"
     end
+
+    # handle overday
+    if trains.size < info_count
+      time_table = get_time_table_between_station(@from_station, @to_station, query_date + 1.day)
+      tmr_trains = time_table.sort_by{ |t| t["OriginStopTime"]["DepartureTime"] }
+                             .first(info_count - trains.size)
+
+      tmr_trains.each do |tmr_train|
+        msg += "#{tmr_train["DailyTrainInfo"]["TrainTypeName"]["Zh_tw"]} : 翌日 #{tmr_train["OriginStopTime"]["DepartureTime"]}\n"
+      end
+    end
+
     msg
   end
 
