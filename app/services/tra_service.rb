@@ -7,14 +7,23 @@ class TraService
   end
 
   def next_train_info
+    train_infos(1)
+  end
+
+  def train_infos(info_count = 5)
     query_date = @base_datetime.to_date
     time_table = get_time_table_between_station(@from_station, @to_station, query_date)
     time_table = get_time_table_between_station(@from_station, @to_station, query_date + 1.day) if time_table.size == 0
 
-    first_train = time_table.sort_by{ |t| t["OriginStopTime"]["DepartureTime"] }
-                    .find{ |t| @base_datetime <= Time.zone.parse("#{@base_datetime.to_date} #{t["OriginStopTime"]["DepartureTime"]}") }
+    trains = time_table.sort_by{ |t| t["OriginStopTime"]["DepartureTime"] }
+                    .select{ |t| @base_datetime <= Time.zone.parse("#{@base_datetime.to_date} #{t["OriginStopTime"]["DepartureTime"]}") }
+                    .first(info_count)
 
-    "下一班列車: #{first_train["DailyTrainInfo"]["TrainTypeName"]["Zh_tw"]} 於 #{first_train["OriginStopTime"]["DepartureTime"]} 發車"
+    msg = "近#{info_count}班列車: \n"
+    trains.each do |train|
+      msg += "#{train["DailyTrainInfo"]["TrainTypeName"]["Zh_tw"]} : #{train["OriginStopTime"]["DepartureTime"]}\n"
+    end
+    msg
   end
 
   private

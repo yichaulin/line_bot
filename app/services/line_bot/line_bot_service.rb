@@ -50,7 +50,8 @@ module LineBot
         @img_url = store.menu.url
       elsif query_tra?(words)
         words.delete('台鐵')
-        @return_text = TraService.new(from: words[0], to: words[1]).next_train_info
+        words.delete('臺鐵')
+        @return_text = TraService.new(from: words[0], to: words[1]).train_infos
       end
     end
 
@@ -60,7 +61,7 @@ module LineBot
     end
 
     def query_tra?(words)
-      words.include?('台鐵')
+      words.include?('台鐵') || words.include?('臺鐵')
     end
   end
 end
