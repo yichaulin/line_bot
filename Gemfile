@@ -41,6 +41,8 @@ gem 'bootstrap-sass', '~> 3.3.6'
 gem 'fog'
 gem "fog-aws"
 
+gem 'dotenv-rails', groups: [:development, :test]
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

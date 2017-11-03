@@ -1,6 +1,6 @@
 class TraService
   def initialize(options = {})
-    @host = 'http://ptx.transportdata.tw/MOTC/'
+    @host = 'http://ptx.transportdata.tw/MOTC'
     @from_station = find_station_id(options[:from]) if options[:from]
     @to_station   = find_station_id(options[:to]) if options[:to]
     @base_datetime = options[:time].present? ? Time.zone.parse(options[:time]) : Time.zone.now
@@ -42,8 +42,9 @@ class TraService
   def get_time_table_between_station(from, to, time = Time.zone.now)
     query_date = time.to_date.strftime('%Y-%m-%d')
     api_url = "#{@host}/v2/Rail/TRA/DailyTimetable/OD/#{from}/to/#{to}/#{query_date}"
+    p api_url
 
-    res = RestClient.get(api_url)
+    res = RestClient.get(api_url, authorization_header)
     JSON.parse(res.body)
   end
 
@@ -51,5 +52,16 @@ class TraService
     station = TraStation.find_by(station_name: station_name.gsub('台', '臺'))
     fail "wrong station name, #{station_name}" if station.blank?
     station.station_id
+  end
+
+  def authorization_header(gmt_time = Time.zone.now.utc.strftime('%a, %d %b %Y %T GMT'))
+    app_id = ENV['PTX_APP_ID']
+    app_key = ENV['PTX_APP_KEY']
+
+    hmac = OpenSSL::HMAC.digest("SHA1", app_key, "x-date: #{gmt_time}")
+    signature = "#{Base64.strict_encode64(hmac)}"
+    authorization = %[hmac username="#{app_id}", algorithm="hmac-sha1", headers="x-date", signature="#{signature}"]
+
+    { authorization: authorization, 'x-date': gmt_time }
   end
 end
